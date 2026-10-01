@@ -117,19 +117,19 @@ h1 {
     animation: flash 1s infinite alternate;
 }
 
-/* Corrected perimeter positioning for the 12 LED lights */
-.light:nth-child(1)  { top: 6px; left: 50%; transform: translateX(-50%); }
-.light:nth-child(2)  { top: 12%; right: 28%; }
-.light:nth-child(3)  { top: 28%; right: 12%; }
-.light:nth-child(4)  { top: 50%; right: 6%; transform: translateY(-50%); }
-.light:nth-child(5)  { bottom: 28%; right: 12%; }
-.light:nth-child(6)  { bottom: 12%; right: 28%; }
-.light:nth-child(7)  { bottom: 6px; left: 50%; transform: translateX(-50%); }
-.light:nth-child(8)  { bottom: 12%; left: 28%; }
-.light:nth-child(9)  { bottom: 28%; left: 12%; }
-.light:nth-child(10) { top: 50%; left: 6%; transform: translateY(-50%); }
-.light:nth-child(11) { top: 28%; left: 12%; }
-.light:nth-child(12) { top: 12%; left: 28%; }
+/* Stable absolute positioning on the ring rim */
+.light:nth-child(1)  { top: 8px; left: 50%; transform: translateX(-50%); }
+.light:nth-child(2)  { top: 15%; right: 22%; }
+.light:nth-child(3)  { top: 32%; right: 8%; }
+.light:nth-child(4)  { top: 50%; right: 4%; transform: translateY(-50%); }
+.light:nth-child(5)  { bottom: 32%; right: 8%; }
+.light:nth-child(6)  { bottom: 15%; right: 22%; }
+.light:nth-child(7)  { bottom: 8px; left: 50%; transform: translateX(-50%); }
+.light:nth-child(8)  { bottom: 15%; left: 22%; }
+.light:nth-child(9)  { bottom: 32%; left: 8%; }
+.light:nth-child(10) { top: 50%; left: 4%; transform: translateY(-50%); }
+.light:nth-child(11) { top: 32%; left: 8%; }
+.light:nth-child(12) { top: 15%; left: 22%; }
 
 @keyframes flash {
     0% { opacity: 0.3; background-color: #fff; }
