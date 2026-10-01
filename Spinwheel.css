@@ -98,13 +98,13 @@ body {
 
 .wheel-outer-ring {
     position: relative;
-    width: 260px;
-    height: 260px;
+    width: 280px;
+    height: 280px;
     background: #0d0c09;
     border-radius: 50%;
-    padding: 6px;
+    padding: 8px;
     border: 4px solid #ffd700;
-    box-shadow: 0 0 25px rgba(255, 215, 0, 0.35);
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
     margin: 0 auto 15px auto;
     display: flex;
     justify-content: center;
@@ -113,58 +113,61 @@ body {
 
 .pointer {
     position: absolute;
-    top: -14px;
+    top: -16px;
     left: 50%;
     transform: translateX(-50%);
     width: 0;
     height: 0;
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-    border-top: 20px solid #ffd700;
-    z-index: 30;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-top: 22px solid #ffd700;
+    z-index: 40;
+    filter: drop-shadow(0 3px 5px rgba(0,0,0,0.9));
 }
 
-/* Colorful & Vibrant Conic Gradient Wheel Disk */
+/* High-End Colorful Conic Wheel Disk */
 .wheel-disk {
     position: relative;
     width: 100%;
     height: 100%;
     border-radius: 50%;
     overflow: hidden;
-    transition: transform 4.5s cubic-bezier(0.1, 0.9, 0.2, 1);
+    /* Smooth cubic-bezier physics for professional deceleration */
+    transition: transform 4.5s cubic-bezier(0.15, 0.85, 0.12, 1);
     border: 2px solid #ffd700;
     background: conic-gradient(
-        #e63946 0deg 60deg,    /* Red */
-        #ffb703 60deg 120deg,   /* Gold/Yellow */
-        #2a9d8f 120deg 180deg,  /* Teal/Green */
-        #4361ee 180deg 240deg,  /* Royal Blue */
-        #7209b7 240deg 300deg,  /* Purple */
-        #f72585 300deg 360deg   /* Magenta/Pink */
+        #d90429 0deg 60deg,    /* Rich Red */
+        #ffb703 60deg 120deg,   /* Vibrant Gold */
+        #2b9348 120deg 180deg,  /* Emerald Green */
+        #3a86ff 180deg 240deg,  /* Bright Blue */
+        #7209b7 240deg 300deg,  /* Deep Purple */
+        #f72585 300deg 360deg   /* Hot Magenta */
     );
 }
 
-.wheel-label {
+/* Perfect Slice Alignment using CSS variables */
+.slice {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    transform: rotate(calc(var(--i) * 60deg + 30deg));
     text-align: center;
-    transform-origin: center;
     pointer-events: none;
 }
 
-.wheel-label span {
+.slice .text {
     position: absolute;
-    top: 25px;
+    top: 22px;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 11px;
-    font-weight: 800;
-    color: #fff;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.9);
-    width: 70px;
+    font-size: 12px;
+    font-weight: 900;
+    color: #ffffff;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.9);
+    letter-spacing: 0.5px;
+    width: 80px;
 }
 
 .wheel-center-cap {
@@ -172,19 +175,19 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 36px;
-    height: 36px;
-    background: radial-gradient(circle, #fff 0%, #ffd700 60%, #b8860b 100%);
+    width: 42px;
+    height: 42px;
+    background: radial-gradient(circle, #fff 0%, #ffd700 65%, #996515 100%);
     border: 2px solid #000;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
     color: #000;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: bold;
-    z-index: 20;
-    box-shadow: 0 0 10px rgba(0,0,0,0.7);
+    z-index: 30;
+    box-shadow: 0 0 12px rgba(0,0,0,0.8);
 }
 
 /* Buttons */
@@ -232,18 +235,18 @@ button {
 
 /* Result Section */
 .result-title {
-    font-size: 20px;
+    font-size: 22px;
     color: #4CAF50;
     margin-bottom: 4px;
 }
 
 .prize-highlight {
     font-family: 'Playfair Display', serif;
-    font-size: 28px;
+    font-size: 30px;
     font-weight: 900;
     color: #ffd700;
     margin: 8px 0;
-    text-shadow: 0 0 12px rgba(255, 215, 0, 0.5);
+    text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
 }
 
 .timer-box {
@@ -279,34 +282,6 @@ button {
 .security-code strong {
     color: #ffd700;
     letter-spacing: 1px;
-}
-
-/* History Box */
-.history-box {
-    margin-top: 10px;
-    padding: 10px;
-    background: rgba(15, 14, 11, 0.95);
-    border: 1px dashed #ffd700;
-    border-radius: 10px;
-    font-size: 12px;
-    text-align: left;
-}
-
-.history-box h3 {
-    color: #ffd700;
-    font-size: 13px;
-    margin-bottom: 4px;
-}
-
-.history-time {
-    font-size: 10px;
-    color: #aaa;
-    margin-top: 3px;
-}
-
-.history-status {
-    font-weight: bold;
-    margin-top: 3px;
 }
 
 /* Disclaimers & Notices */
