@@ -1,5 +1,4 @@
-const canvas = document.getElementById('wheel');
-const ctx = canvas.getContext('2d');
+const wheel = document.getElementById('wheel');
 const spinBtn = document.getElementById('spin-btn');
 const wheelSection = document.getElementById('wheel-section');
 const resultSection = document.getElementById('result-section');
@@ -19,58 +18,9 @@ const spinSound = document.getElementById('spin-sound');
 const winSound = document.getElementById('win-sound');
 const loseSound = document.getElementById('lose-sound');
 
-// High-contrast, rich colorful wheel segments
-const prizes = [
-    { text: "50% OFF", color: "#1a1a1a" },
-    { text: "Try Again", color: "#b30000" },
-    { text: "10% OFF", color: "#1e1e1e" },
-    { text: "20% OFF", color: "#2d2d2d" },
-    { text: "30% OFF", color: "#161616" },
-    { text: "40% OFF", color: "#262626" }
-];
-
-const numSegments = prizes.length;
-const arcSize = (2 * Math.PI) / numSegments;
-let startAngle = 0;
+const prizes = ["50% OFF", "Try Again", "10% OFF", "20% OFF", "30% OFF", "40% OFF"];
 let isSpinning = false;
 let currentRotation = 0;
-
-// Draw colorful segments onto the wheel canvas
-function drawWheel() {
-    const size = 280;
-    ctx.clearRect(0, 0, size, size);
-    const center = size / 2;
-    const radius = center - 6;
-
-    for (let i = 0; i < numSegments; i++) {
-        const angle = startAngle + i * arcSize;
-        
-        // Draw segment slice
-        ctx.beginPath();
-        ctx.fillStyle = prizes[i].color;
-        ctx.moveTo(center, center);
-        ctx.arc(center, center, radius, angle, angle + arcSize, false);
-        ctx.lineTo(center, center);
-        ctx.fill();
-        
-        // Luxury gold borders between slices
-        ctx.strokeStyle = '#ffd700';
-        ctx.lineWidth = 2.5;
-        ctx.stroke();
-
-        // Draw segment text
-        ctx.save();
-        ctx.translate(center, center);
-        ctx.rotate(angle + arcSize / 2);
-        ctx.textAlign = "right";
-        ctx.fillStyle = "#ffffff";
-        ctx.font = "bold 13px 'Montserrat', sans-serif";
-        ctx.shadowColor = "rgba(0, 0, 0, 0.9)";
-        ctx.shadowBlur = 4;
-        ctx.fillText(prizes[i].text, radius - 20, 5);
-        ctx.restore();
-    }
-}
 
 function spinWheel() {
     if (isSpinning) return;
@@ -98,19 +48,19 @@ function spinWheel() {
     isSpinning = true;
     spinBtn.disabled = true;
 
-    // Play spin audio
+    // Play spin audio safely
     if (spinSound) {
         spinSound.currentTime = 0;
-        spinSound.play().catch(e => console.log("Audio prevented:", e));
+        spinSound.play().catch(e => console.log("Audio play blocked by browser:", e));
     }
 
     const randomSpin = Math.floor(Math.random() * 5) + 5; 
-    const winningIndex = Math.floor(Math.random() * numSegments);
-    const degrees = randomSpin * 360 + (360 - (winningIndex * (360 / numSegments))) - (360 / numSegments / 2);
+    const winningIndex = Math.floor(Math.random() * prizes.length);
+    const degreesPerSlice = 360 / prizes.length;
+    const targetDegree = randomSpin * 360 + (360 - (winningIndex * degreesPerSlice)) - (degreesPerSlice / 2);
 
-    currentRotation += degrees;
-    canvas.style.transition = 'transform 4s cubic-bezier(0.15, 0.90, 0.15, 1)';
-    canvas.style.transform = `rotate(${currentRotation}deg)`;
+    currentRotation += targetDegree;
+    wheel.style.transform = `rotate(${currentRotation}deg)`;
 
     setTimeout(() => {
         isSpinning = false;
@@ -121,7 +71,7 @@ function spinWheel() {
            // localStorage.setItem('dfw_already_spun', 'true');
         */
 
-        showResult(prizes[winningIndex].text);
+        showResult(prizes[winningIndex]);
     }, 4000);
 }
 
@@ -163,7 +113,7 @@ function showResult(prizeText) {
         winSound.currentTime = 0;
         winSound.play().catch(e => console.log("Audio prevented:", e));
     }
-    confetti({ particleCount: 130, spread: 85, origin: { y: 0.6 } });
+    try { confetti({ particleCount: 130, spread: 85, origin: { y: 0.6 } }); } catch(e) {}
 }
 
 function showActiveResultState(prizeData) {
@@ -245,6 +195,3 @@ backToWheelBtn.addEventListener('click', () => {
         wheelSection.classList.remove('hidden');
     }
 });
-
-// Immediately draw wheel on script load
-drawWheel();
