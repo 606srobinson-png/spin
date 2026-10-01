@@ -7,20 +7,26 @@ const prizeDisplay = document.getElementById('prize-display');
 const codeDisplay = document.getElementById('code-display');
 const countdownEl = document.getElementById('countdown');
 const mainHistoryBtn = document.getElementById('main-history-btn');
-const historyBtn = document.getElementById('history-btn');
+const backToWheelBtn = document.getElementById('back-to-wheel-btn');
+const closeHistoryBtn = document.getElementById('close-history-btn');
 const historyBox = document.getElementById('history-box');
 const historyPrizeText = document.getElementById('history-prize-text');
 const historyTimeText = document.getElementById('history-time-text');
 const historyStatusText = document.getElementById('history-status-text');
 
-// Exact 6 Segments matching your wheel layout
+// Audio elements
+const spinSound = document.getElementById('spin-sound');
+const winSound = document.getElementById('win-sound');
+const loseSound = document.getElementById('lose-sound');
+
+// High-contrast, rich colorful wheel segments matching your layout
 const prizes = [
-    { text: "50% OFF", color: "#1e1e1e" },
+    { text: "50% OFF", color: "#1a1a1a" },
     { text: "Try Again", color: "#b30000" },
     { text: "10% OFF", color: "#1e1e1e" },
-    { text: "20% OFF", color: "#333333" },
-    { text: "30% OFF", color: "#1e1e1e" },
-    { text: "40% OFF", color: "#333333" }
+    { text: "20% OFF", color: "#2d2d2d" },
+    { text: "30% OFF", color: "#161616" },
+    { text: "40% OFF", color: "#262626" }
 ];
 
 const numSegments = prizes.length;
@@ -29,62 +35,84 @@ let startAngle = 0;
 let isSpinning = false;
 let currentRotation = 0;
 
+// High-DPI crisp rendering fix for mobile phones
+function resizeCanvas() {
+    const parentWidth = canvas.parentElement.clientWidth;
+    const dpr = window.devicePixelRatio || 1;
+    
+    canvas.width = parentWidth * dpr;
+    canvas.height = parentWidth * dpr;
+    canvas.style.width = `${parentWidth}px`;
+    canvas.style.height = `${parentWidth}px`;
+    
+    ctx.scale(dpr, dpr);
+    drawWheel();
+}
+
 function drawWheel() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    const center = canvas.width / 2;
-    const radius = center - 5;
+    const displayWidth = canvas.clientWidth;
+    if (displayWidth === 0) return;
+    
+    ctx.clearRect(0, 0, displayWidth, displayWidth);
+    const center = displayWidth / 2;
+    const radius = center - 4;
 
     for (let i = 0; i < numSegments; i++) {
         const angle = startAngle + i * arcSize;
         
+        // Draw segment slice
         ctx.beginPath();
         ctx.fillStyle = prizes[i].color;
         ctx.moveTo(center, center);
         ctx.arc(center, center, radius, angle, angle + arcSize, false);
         ctx.lineTo(center, center);
         ctx.fill();
-        ctx.strokeStyle = '#d4af37';
+        
+        // Luxury gold borders between slices
+        ctx.strokeStyle = '#ffd700';
         ctx.lineWidth = 2;
         ctx.stroke();
 
+        // Draw segment text
         ctx.save();
         ctx.translate(center, center);
         ctx.rotate(angle + arcSize / 2);
         ctx.textAlign = "right";
         ctx.fillStyle = "#ffffff";
         ctx.font = "bold 13px 'Montserrat', sans-serif";
-        ctx.fillText(prizes[i].text, radius - 20, 5);
+        ctx.shadowColor = "rgba(0, 0, 0, 0.8)";
+        ctx.shadowBlur = 4;
+        ctx.fillText(prizes[i].text, radius - 18, 5);
         ctx.restore();
     }
 }
 
-function spinWheel() {
-    if (isSpinning) return;
+//function spinWheel() {
+ if (isSpinning) return;
     
-    /* 
-      =================================================================
-      ONE-TIME SPIN FEATURE (Currently Disabled / Commented Out)
-      To activate permanent one-time spin per user/device later, 
-      uncomment the block below:
-      
-      if (localStorage.getItem('dfw_already_spun') === 'true') {
-          alert("You have already used your one-time spin!");
-          return;
-      }
-      =================================================================
-      */
+     ONE-TIME SPIN LOCK CHECK (Activates one-time spin per device)
+        if (localStorage.getItem('dfw_already_spun') === 'true') {
+        alert("You have already used your one-time spin!");
+    return;
+    }
 
     const activePrize = localStorage.getItem('dfw_active_prize');
     if (activePrize) {
         const prizeData = JSON.parse(activePrize);
         if (new Date().getTime() < prizeData.expiresAt) {
-            alert("You already have an active prize! Check your active prize below.");
+            showActiveResultState(prizeData);
             return;
         }
     }
 
     isSpinning = true;
     spinBtn.disabled = true;
+
+    // Play spin audio
+    if (spinSound) {
+        spinSound.currentTime = 0;
+        spinSound.play().catch(e => console.log("Audio prevented:", e));
+    }
 
     const randomSpin = Math.floor(Math.random() * 5) + 5; 
     const winningIndex = Math.floor(Math.random() * numSegments);
@@ -98,10 +126,8 @@ function spinWheel() {
         isSpinning = false;
         spinBtn.disabled = false;
         
-        /* 
-          // Uncomment this line later when you want to lock the spin permanently after winning:
-          // localStorage.setItem('dfw_already_spun', 'true');
-        */
+        // Lock device permanently after spin
+        localStorage.setItem('dfw_already_spun', 'true');
 
         showResult(prizes[winningIndex].text);
     }, 4000);
@@ -116,6 +142,11 @@ function showResult(prizeText) {
         document.getElementById('win-title').textContent = "SO CLOSE!";
         document.querySelector('.timer-box').style.display = 'none';
         document.querySelector('.security-code').style.display = 'none';
+        
+        if (loseSound) {
+            loseSound.currentTime = 0;
+            loseSound.play().catch(e => console.log("Audio prevented:", e));
+        }
         return;
     }
 
@@ -135,7 +166,30 @@ function showResult(prizeText) {
     localStorage.setItem('dfw_active_prize', JSON.stringify(prizeData));
 
     startCountdown(expiresAt);
-    confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+
+    if (winSound) {
+        winSound.currentTime = 0;
+        winSound.play().catch(e => console.log("Audio prevented:", e));
+    }
+    confetti({ particleCount: 130, spread: 85, origin: { y: 0.6 } });
+}
+
+function showActiveResultState(prizeData) {
+    wheelSection.classList.add('hidden');
+    resultSection.classList.remove('hidden');
+    prizeDisplay.textContent = prizeData.prize;
+    codeDisplay.textContent = prizeData.code;
+    
+    if (prizeData.prize === "Try Again") {
+        document.getElementById('win-title').textContent = "SO CLOSE!";
+        document.querySelector('.timer-box').style.display = 'none';
+        document.querySelector('.security-code').style.display = 'none';
+    } else {
+        document.getElementById('win-title').textContent = "ACTIVE PRIZE";
+        document.querySelector('.timer-box').style.display = 'block';
+        document.querySelector('.security-code').style.display = 'block';
+        startCountdown(prizeData.expiresAt);
+    }
 }
 
 function startCountdown(expireTime) {
@@ -161,7 +215,7 @@ function checkHistory() {
     const activePrize = localStorage.getItem('dfw_active_prize');
 
     if (!activePrize) {
-        historyPrizeText.textContent = "No active prizes found.";
+        historyPrizeText.textContent = "No active prizes found (Spin already used).";
         historyTimeText.textContent = "";
         historyStatusText.textContent = "";
         return;
@@ -171,23 +225,36 @@ function checkHistory() {
     const timeLeft = prizeData.expiresAt - new Date().getTime();
 
     if (timeLeft < 0) {
-        historyPrizeText.textContent = `Previous Prize: ${prizeData.prize} (${prizeData.code})`;
+        historyPrizeText.textContent = `Prize: ${prizeData.prize} (${prizeData.code})`;
         historyStatusText.textContent = "Status: EXPIRED";
         historyStatusText.style.color = "#ff4d4d";
         historyTimeText.textContent = "";
     } else {
         const mins = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
         const secs = Math.floor((timeLeft % (1000 * 60)) / 1000);
-        historyPrizeText.textContent = `Active Prize: ${prizeData.prize} | Code: ${prizeData.code}`;
+        historyPrizeText.textContent = `Prize: ${prizeData.prize} | Code: ${prizeData.code}`;
         historyStatusText.textContent = "Status: ACTIVE (Show to cashier)";
         historyStatusText.style.color = "#4CAF50";
         historyTimeText.textContent = `Time remaining: ${mins}:${secs < 10 ? '0' : ''}${secs}`;
     }
 }
 
+// Button Listeners
 spinBtn.addEventListener('click', spinWheel);
 mainHistoryBtn.addEventListener('click', checkHistory);
-historyBtn.addEventListener('click', checkHistory);
+closeHistoryBtn.addEventListener('click', () => historyBox.classList.add('hidden'));
 
-// Ensure the canvas fully renders the wheel when the script runs
-window.addEventListener('load', drawWheel);
+// Button to view last spin / active prize from result screen
+backToWheelBtn.addEventListener('click', () => {
+    const activePrize = localStorage.getItem('dfw_active_prize');
+    if (activePrize) {
+        showActiveResultState(JSON.parse(activePrize));
+    } else {
+        resultSection.classList.add('hidden');
+        wheelSection.classList.remove('hidden');
+    }
+});
+
+// Initialize on load and resize
+window.addEventListener('load', resizeCanvas);
+window.addEventListener('resize', resizeCanvas);
