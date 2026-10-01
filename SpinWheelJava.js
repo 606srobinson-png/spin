@@ -26,10 +26,8 @@ function spinWheel() {
     if (isSpinning) return;
     
     /* =================================================================
-       [ONE-TIME SPIN LOCK CODE - CURRENTLY IN COMMENT]
-       The code below is fully written for you. It prevents multiple spins.
-       Right now it is inactive so you can test freely. 
-       When you are ready to launch, just delete the `/*` and `*\/` around it.
+       [ONE-TIME SPIN LOCK CODE - CURRENTLY IN COMMENT FOR TESTING]
+       Remove `/*` and `*\/` when you are ready to launch live.
        =================================================================
        
        if (localStorage.getItem('dfw_already_spun') === 'true') {
@@ -50,10 +48,9 @@ function spinWheel() {
     isSpinning = true;
     spinBtn.disabled = true;
 
-    // Play spin audio safely
     if (spinSound) {
         spinSound.currentTime = 0;
-        spinSound.play().catch(e => console.log("Audio play blocked by browser:", e));
+        spinSound.play().catch(e => console.log("Audio play blocked:", e));
     }
 
     const randomSpin = Math.floor(Math.random() * 5) + 5; 
@@ -69,8 +66,7 @@ function spinWheel() {
         spinBtn.disabled = false;
         
         /* 
-           // This line is also part of the one-time lock code.
-           // Uncomment it along with the top block when ready to launch live:
+           // Uncomment along with top block when launching live:
            // localStorage.setItem('dfw_already_spun', 'true');
         */
 
@@ -156,32 +152,19 @@ function startCountdown(expireTime) {
 }
 
 function checkHistory() {
-    historyBox.classList.toggle('hidden');
+    // If an active prize exists, jump straight to the home/result page view to show it!
     const activePrize = localStorage.getItem('dfw_active_prize');
-
-    if (!activePrize) {
-        historyPrizeText.textContent = "No active prizes found yet. Spin the wheel first!";
-        historyTimeText.textContent = "";
-        historyStatusText.textContent = "";
+    if (activePrize) {
+        showActiveResultState(JSON.parse(activePrize));
+        historyBox.classList.add('hidden');
         return;
     }
 
-    const prizeData = JSON.parse(activePrize);
-    const timeLeft = prizeData.expiresAt - new Date().getTime();
-
-    if (timeLeft < 0) {
-        historyPrizeText.textContent = `Prize: ${prizeData.prize} (${prizeData.code})`;
-        historyStatusText.textContent = "Status: EXPIRED";
-        historyStatusText.style.color = "#ff4d4d";
-        historyTimeText.textContent = "";
-    } else {
-        const mins = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-        const secs = Math.floor((timeLeft % (1000 * 60)) / 1000);
-        historyPrizeText.textContent = `Prize: ${prizeData.prize} | Code: ${prizeData.code}`;
-        historyStatusText.textContent = "Status: ACTIVE (Show to cashier)";
-        historyStatusText.style.color = "#4CAF50";
-        historyTimeText.textContent = `Time remaining: ${mins}:${secs < 10 ? '0' : ''}${secs}`;
-    }
+    // Otherwise, toggle the small info box if no active prize is found yet
+    historyBox.classList.toggle('hidden');
+    historyPrizeText.textContent = "No active prizes found yet. Spin the wheel first!";
+    historyTimeText.textContent = "";
+    historyStatusText.textContent = "";
 }
 
 // Button Listeners
@@ -189,12 +172,8 @@ spinBtn.addEventListener('click', spinWheel);
 mainHistoryBtn.addEventListener('click', checkHistory);
 closeHistoryBtn.addEventListener('click', () => historyBox.classList.add('hidden'));
 
+// Takes you back to the main wheel home screen
 backToWheelBtn.addEventListener('click', () => {
-    const activePrize = localStorage.getItem('dfw_active_prize');
-    if (activePrize) {
-        showActiveResultState(JSON.parse(activePrize));
-    } else {
-        resultSection.classList.add('hidden');
-        wheelSection.classList.remove('hidden');
-    }
+    resultSection.classList.add('hidden');
+    wheelSection.classList.remove('hidden');
 });
