@@ -95,7 +95,7 @@ h1 {
     overflow: hidden;
 }
 
-/* Flashing LED Lights around the rim */
+/* Flashing LED Lights Around Rim */
 .wheel-lights {
     position: absolute;
     top: 0;
@@ -117,19 +117,19 @@ h1 {
     animation: flash 1s infinite alternate;
 }
 
-/* Stable absolute positioning on the ring rim */
-.light:nth-child(1)  { top: 8px; left: 50%; transform: translateX(-50%); }
-.light:nth-child(2)  { top: 15%; right: 22%; }
-.light:nth-child(3)  { top: 32%; right: 8%; }
-.light:nth-child(4)  { top: 50%; right: 4%; transform: translateY(-50%); }
-.light:nth-child(5)  { bottom: 32%; right: 8%; }
-.light:nth-child(6)  { bottom: 15%; right: 22%; }
-.light:nth-child(7)  { bottom: 8px; left: 50%; transform: translateX(-50%); }
-.light:nth-child(8)  { bottom: 15%; left: 22%; }
-.light:nth-child(9)  { bottom: 32%; left: 8%; }
-.light:nth-child(10) { top: 50%; left: 4%; transform: translateY(-50%); }
-.light:nth-child(11) { top: 32%; left: 8%; }
-.light:nth-child(12) { top: 15%; left: 22%; }
+/* Positioning LED lights around circle perimeter */
+.light:nth-child(1)  { top: 2px; left: 50%; transform: translateX(-50%); }
+.light:nth-child(2)  { top: 8%; right: 28%; }
+.light:nth-child(3)  { top: 22%; right: 8%; }
+.light:nth-child(4)  { top: 50%; right: 2%; transform: translateY(-50%); }
+.light:nth-child(5)  { bottom: 22%; right: 8%; }
+.light:nth-child(6)  { bottom: 8%; right: 28%; }
+.light:nth-child(7)  { bottom: 2px; left: 50%; transform: translateX(-50%); }
+.light:nth-child(8)  { bottom: 8%; left: 28%; }
+.light:nth-child(9)  { bottom: 22%; left: 8%; }
+.light:nth-child(10) { top: 50%; left: 2%; transform: translateY(-50%); }
+.light:nth-child(11) { top: 22%; left: 8%; }
+.light:nth-child(12) { top: 8%; left: 28%; }
 
 @keyframes flash {
     0% { opacity: 0.3; background-color: #fff; }
@@ -163,6 +163,7 @@ h1 {
     overflow: hidden;
 }
 
+/* Fixed spinning anchor from exact center */
 #wheel {
     width: 100% !important;
     height: 100% !important;
@@ -218,13 +219,13 @@ button {
     box-shadow: 0 6px 15px rgba(212, 175, 55, 0.4);
 }
 
-#main-history-btn, #history-btn {
+#main-history-btn {
     background: transparent;
     color: #d4af37;
     border: 2px solid #d4af37;
 }
 
-#main-history-btn:hover, #history-btn:hover {
+#main-history-btn:hover {
     background: rgba(212, 175, 55, 0.1);
 }
 
