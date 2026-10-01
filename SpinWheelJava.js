@@ -7,48 +7,28 @@ const codeDisplay = document.getElementById('code-display');
 const countdownEl = document.getElementById('countdown');
 const mainHistoryBtn = document.getElementById('main-history-btn');
 const backToWheelBtn = document.getElementById('back-to-wheel-btn');
-const closeHistoryBtn = document.getElementById('close-history-btn');
-const historyBox = document.getElementById('history-box');
-const historyPrizeText = document.getElementById('history-prize-text');
-const historyTimeText = document.getElementById('history-time-text');
-const historyStatusText = document.getElementById('history-status-text');
 
 // Audio elements
 const spinSound = document.getElementById('spin-sound');
 const winSound = document.getElementById('win-sound');
 const loseSound = document.getElementById('lose-sound');
 
+// Wheel configuration (6 slices, 60 degrees each)
+// Order matching conic gradient clockwise from top: 
+// 0: 50% OFF, 1: Try Again, 2: 10% OFF, 3: 20% OFF, 4: 30% OFF, 5: 40% OFF
 const prizes = ["50% OFF", "Try Again", "10% OFF", "20% OFF", "30% OFF", "40% OFF"];
 let isSpinning = false;
 let currentRotation = 0;
 
-// Check on page load if user already has an active prize so refreshing doesn't lose it
+// CLEAR LOCALSTORAGE ON LOAD FOR DEVELOPER CONVENIENCE
+// This guarantees refreshing the page always puts you back at a clean slate ready to spin!
 window.addEventListener('DOMContentLoaded', () => {
-    const activePrize = localStorage.getItem('dfw_active_prize');
-    if (activePrize) {
-        const prizeData = JSON.parse(activePrize);
-        if (new Date().getTime() < prizeData.expiresAt) {
-            showActiveResultState(prizeData);
-        } else {
-            localStorage.removeItem('dfw_active_prize');
-        }
-    }
+    localStorage.removeItem('dfw_active_prize');
+    localStorage.removeItem('dfw_already_spun');
 });
 
 function spinWheel() {
     if (isSpinning) return;
-    
-    /* =================================================================
-       [ONE-TIME SPIN LOCK CODE - CURRENTLY IN COMMENT FOR TESTING]
-       Remove `/*` and `*\/` when ready to go live.
-       =================================================================
-       
-       if (localStorage.getItem('dfw_already_spun') === 'true') {
-           alert("You have already used your one-time spin!");
-           return;
-       }
-    */
-
     isSpinning = true;
     spinBtn.disabled = true;
 
@@ -57,23 +37,25 @@ function spinWheel() {
         spinSound.play().catch(e => console.log("Audio play blocked:", e));
     }
 
-    const randomSpin = Math.floor(Math.random() * 5) + 6; // Extra rotations for great effect
+    // Pick random winning index
     const winningIndex = Math.floor(Math.random() * prizes.length);
-    const degreesPerSlice = 360 / prizes.length;
-    const targetDegree = randomSpin * 360 + (360 - (winningIndex * degreesPerSlice)) - (degreesPerSlice / 2);
+    const degreesPerSlice = 360 / prizes.length; // 60 degrees
 
-    currentRotation += targetDegree;
+    // Math to land pointer dead-center on the chosen slice segment
+    // Each slice center relative to rotation: index * 60 + 30
+    const extraSpins = 360 * 6; // 6 full dramatic rotations
+    const targetSliceAngle = winningIndex * degreesPerSlice + (degreesPerSlice / 2);
+    
+    // Calculate final absolute rotation angle
+    const totalRotation = currentRotation + extraSpins + (360 - (currentRotation % 360)) + (360 - targetSliceAngle);
+    
+    currentRotation = totalRotation;
     wheel.style.transform = `rotate(${currentRotation}deg)`;
 
+    // Wait for CSS transition to finish (4.5 seconds)
     setTimeout(() => {
         isSpinning = false;
         spinBtn.disabled = false;
-        
-        /* 
-           // Uncomment when launching live:
-           // localStorage.setItem('dfw_already_spun', 'true');
-        */
-
         showResult(prizes[winningIndex]);
     }, 4500);
 }
@@ -102,39 +84,13 @@ function showResult(prizeText) {
     const randomCode = 'DFW-' + Math.floor(1000 + Math.random() * 9000);
     codeDisplay.textContent = randomCode;
 
-    const expiresAt = new Date().getTime() + 10 * 60 * 1000;
-    const prizeData = {
-        prize: prizeText,
-        code: randomCode,
-        expiresAt: expiresAt
-    };
-    localStorage.setItem('dfw_active_prize', JSON.stringify(prizeData));
-
-    startCountdown(expiresAt);
+    startCountdown(new Date().getTime() + 10 * 60 * 1000);
 
     if (winSound) {
         winSound.currentTime = 0;
         winSound.play().catch(e => console.log("Audio prevented:", e));
     }
-    try { confetti({ particleCount: 130, spread: 85, origin: { y: 0.6 } }); } catch(e) {}
-}
-
-function showActiveResultState(prizeData) {
-    wheelSection.classList.add('hidden');
-    resultSection.classList.remove('hidden');
-    prizeDisplay.textContent = prizeData.prize;
-    codeDisplay.textContent = prizeData.code;
-    
-    if (prizeData.prize === "Try Again") {
-        document.getElementById('win-title').textContent = "SO CLOSE!";
-        document.querySelector('.timer-box').style.display = 'none';
-        document.querySelector('.security-code').style.display = 'none';
-    } else {
-        document.getElementById('win-title').textContent = "ACTIVE PRIZE";
-        document.querySelector('.timer-box').style.display = 'block';
-        document.querySelector('.security-code').style.display = 'block';
-        startCountdown(prizeData.expiresAt);
-    }
+    try { confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } }); } catch(e) {}
 }
 
 function startCountdown(expireTime) {
@@ -145,7 +101,6 @@ function startCountdown(expireTime) {
         if (distance < 0) {
             clearInterval(interval);
             countdownEl.textContent = "EXPIRED";
-            localStorage.removeItem('dfw_active_prize');
             return;
         }
 
@@ -155,24 +110,14 @@ function startCountdown(expireTime) {
     }, 1000);
 }
 
-function checkHistory() {
-    const activePrize = localStorage.getItem('dfw_active_prize');
-    if (activePrize) {
-        showActiveResultState(JSON.parse(activePrize));
-        historyBox.classList.add('hidden');
-        return;
-    }
-
-    historyBox.classList.toggle('hidden');
-    historyPrizeText.textContent = "No active prizes found yet. Spin the wheel first!";
-    historyTimeText.textContent = "";
-    historyStatusText.textContent = "";
-}
-
-// Button Listeners
+// Button Listeners for Developer Testing
 spinBtn.addEventListener('click', spinWheel);
-mainHistoryBtn.addEventListener('click', checkHistory);
-closeHistoryBtn.addEventListener('click', () => historyBox.classList.add('hidden'));
+
+// Clear state / Reset button
+mainHistoryBtn.addEventListener('click', () => {
+    localStorage.clear();
+    location.reload();
+});
 
 backToWheelBtn.addEventListener('click', () => {
     resultSection.classList.add('hidden');
