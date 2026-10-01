@@ -35,30 +35,12 @@ let startAngle = 0;
 let isSpinning = false;
 let currentRotation = 0;
 
-// High-DPI crisp rendering fix for mobile and desktop screens
-function resizeCanvas() {
-    const parentWidth = canvas.parentElement.clientWidth;
-    if (!parentWidth) return;
-    
-    const dpr = window.devicePixelRatio || 1;
-    
-    canvas.width = parentWidth * dpr;
-    canvas.height = parentWidth * dpr;
-    canvas.style.width = `${parentWidth}px`;
-    canvas.style.height = `${parentWidth}px`;
-    
-    ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset transform
-    ctx.scale(dpr, dpr);
-    drawWheel();
-}
-
+// Draw colorful segments onto the wheel canvas
 function drawWheel() {
-    const displayWidth = canvas.clientWidth;
-    if (displayWidth === 0) return;
-    
-    ctx.clearRect(0, 0, displayWidth, displayWidth);
-    const center = displayWidth / 2;
-    const radius = center - 4;
+    const size = 280;
+    ctx.clearRect(0, 0, size, size);
+    const center = size / 2;
+    const radius = center - 6;
 
     for (let i = 0; i < numSegments; i++) {
         const angle = startAngle + i * arcSize;
@@ -73,7 +55,7 @@ function drawWheel() {
         
         // Luxury gold borders between slices
         ctx.strokeStyle = '#ffd700';
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 2.5;
         ctx.stroke();
 
         // Draw segment text
@@ -83,9 +65,9 @@ function drawWheel() {
         ctx.textAlign = "right";
         ctx.fillStyle = "#ffffff";
         ctx.font = "bold 13px 'Montserrat', sans-serif";
-        ctx.shadowColor = "rgba(0, 0, 0, 0.8)";
+        ctx.shadowColor = "rgba(0, 0, 0, 0.9)";
         ctx.shadowBlur = 4;
-        ctx.fillText(prizes[i].text, radius - 18, 5);
+        ctx.fillText(prizes[i].text, radius - 20, 5);
         ctx.restore();
     }
 }
@@ -95,7 +77,7 @@ function spinWheel() {
     
     /* =================================================================
        [ONE-TIME SPIN FEATURE - CURRENTLY COMMENTED OUT FOR TESTING]
-       Remove the `/*` and `*\/` tags below when ready to launch live.
+       Remove `/*` and `*\/` when ready for final website launch.
        =================================================================
        
        if (localStorage.getItem('dfw_already_spun') === 'true') {
@@ -135,7 +117,7 @@ function spinWheel() {
         spinBtn.disabled = false;
         
         /* 
-           // Uncomment this line when ready to launch live:
+           // Uncomment when launching live:
            // localStorage.setItem('dfw_already_spun', 'true');
         */
 
@@ -225,7 +207,7 @@ function checkHistory() {
     const activePrize = localStorage.getItem('dfw_active_prize');
 
     if (!activePrize) {
-        historyPrizeText.textContent = "No active prizes found.";
+        historyPrizeText.textContent = "No active prizes found yet. Spin the wheel first!";
         historyTimeText.textContent = "";
         historyStatusText.textContent = "";
         return;
@@ -264,8 +246,5 @@ backToWheelBtn.addEventListener('click', () => {
     }
 });
 
-// Force canvas render correctly once window loads
-window.addEventListener('load', () => {
-    setTimeout(resizeCanvas, 50);
-});
-window.addEventListener('resize', resizeCanvas);
+// Immediately draw wheel on script load
+drawWheel();
