@@ -95,7 +95,7 @@ h1 {
     overflow: hidden;
 }
 
-/* Flashing LED Lights Around Rim */
+/* Flashing LED Lights around the rim (Original theme preserved with corrected positioning) */
 .wheel-lights {
     position: absolute;
     top: 0;
@@ -117,19 +117,19 @@ h1 {
     animation: flash 1s infinite alternate;
 }
 
-/* Positioning LED lights around circle perimeter */
-.light:nth-child(1)  { top: 2px; left: 50%; transform: translateX(-50%); }
-.light:nth-child(2)  { top: 8%; right: 28%; }
-.light:nth-child(3)  { top: 22%; right: 8%; }
-.light:nth-child(4)  { top: 50%; right: 2%; transform: translateY(-50%); }
-.light:nth-child(5)  { bottom: 22%; right: 8%; }
-.light:nth-child(6)  { bottom: 8%; right: 28%; }
-.light:nth-child(7)  { bottom: 2px; left: 50%; transform: translateX(-50%); }
-.light:nth-child(8)  { bottom: 8%; left: 28%; }
-.light:nth-child(9)  { bottom: 22%; left: 8%; }
-.light:nth-child(10) { top: 50%; left: 2%; transform: translateY(-50%); }
-.light:nth-child(11) { top: 22%; left: 8%; }
-.light:nth-child(12) { top: 8%; left: 28%; }
+/* Perfectly balanced absolute positioning for the original 12 lights */
+.light:nth-child(1)  { top: 4px; left: 50%; transform: translateX(-50%); }
+.light:nth-child(2)  { top: 10%; right: 25%; }
+.light:nth-child(3)  { top: 25%; right: 10%; }
+.light:nth-child(4)  { top: 50%; right: 4%; transform: translateY(-50%); }
+.light:nth-child(5)  { bottom: 25%; right: 10%; }
+.light:nth-child(6)  { bottom: 10%; right: 25%; }
+.light:nth-child(7)  { bottom: 4px; left: 50%; transform: translateX(-50%); }
+.light:nth-child(8)  { bottom: 10%; left: 25%; }
+.light:nth-child(9)  { bottom: 25%; left: 10%; }
+.light:nth-child(10) { top: 50%; left: 4%; transform: translateY(-50%); }
+.light:nth-child(11) { top: 25%; left: 10%; }
+.light:nth-child(12) { top: 10%; left: 25%; }
 
 @keyframes flash {
     0% { opacity: 0.3; background-color: #fff; }
@@ -163,7 +163,6 @@ h1 {
     overflow: hidden;
 }
 
-/* Fixed spinning anchor from exact center */
 #wheel {
     width: 100% !important;
     height: 100% !important;
