@@ -1,227 +1,195 @@
-// ==========================================
-// DFW SMOKE & VAPOR SHOP - SPIN WHEEL JAVASCRIPT
-// ==========================================
-
-// Prizes configuration matching your wheel sectors
-const prizes = [
-    { text: "10% OFF", color: "#111111", textColor: "#ffd700" },
-    { text: "15% OFF", color: "#d4af37", textColor: "#000000" },
-    { text: "FREE GIFT", color: "#111111", textColor: "#ffd700" },
-    { text: "5% OFF", color: "#222222", textColor: "#ffffff" },
-    { text: "20% OFF", color: "#d4af37", textColor: "#000000" },
-    { text: "TRY AGAIN", color: "#111111", textColor: "#ff4d4d" }
-];
-
 const canvas = document.getElementById('wheel');
 const ctx = canvas.getContext('2d');
-let isSpinning = false;
+const spinBtn = document.getElementById('spin-btn');
+const wheelSection = document.getElementById('wheel-section');
+const resultSection = document.getElementById('result-section');
+const prizeDisplay = document.getElementById('prize-display');
+const codeDisplay = document.getElementById('code-display');
+const countdownEl = document.getElementById('countdown');
+const mainHistoryBtn = document.getElementById('main-history-btn');
+const historyBtn = document.getElementById('history-btn');
+const historyBox = document.getElementById('history-box');
+const historyPrizeText = document.getElementById('history-prize-text');
+const historyTimeText = document.getElementById('history-time-text');
+const historyStatusText = document.getElementById('history-status-text');
 
-// Draw the wheel on page load
-window.onload = function() {
-    drawWheel();
-    checkExistingPrize();
-};
+// Exact 6 Segments matching your wheel image layout
+const prizes = [
+    { text: "50% OFF", color: "#1e1e1e" },
+    { text: "Try Again", color: "#b30000" },
+    { text: "10% OFF", color: "#1e1e1e" },
+    { text: "20% OFF", color: "#333333" },
+    { text: "30% OFF", color: "#1e1e1e" },
+    { text: "40% OFF", color: "#333333" }
+];
+
+const numSegments = prizes.length;
+const arcSize = (2 * Math.PI) / numSegments;
+let startAngle = 0;
+let isSpinning = false;
+let currentRotation = 0;
 
 function drawWheel() {
-    const numSectors = prizes.length;
-    const arcSize = (2 * Math.PI) / numSectors;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     const center = canvas.width / 2;
     const radius = center - 5;
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    for (let i = 0; i < numSectors; i++) {
-        const angle = i * arcSize;
-
-        // Draw Sector
+    for (let i = 0; i < numSegments; i++) {
+        const angle = startAngle + i * arcSize;
+        
         ctx.beginPath();
         ctx.fillStyle = prizes[i].color;
         ctx.moveTo(center, center);
-        ctx.arc(center, center, radius, angle, angle + arcSize);
+        ctx.arc(center, center, radius, angle, angle + arcSize, false);
         ctx.lineTo(center, center);
         ctx.fill();
-        
-        // Sector Border
         ctx.strokeStyle = '#d4af37';
         ctx.lineWidth = 2;
         ctx.stroke();
 
-        // Draw Text
         ctx.save();
         ctx.translate(center, center);
         ctx.rotate(angle + arcSize / 2);
         ctx.textAlign = "right";
-        ctx.fillStyle = prizes[i].textColor;
-        ctx.font = "bold 14px 'Montserrat', sans-serif";
-        ctx.fillText(prizes[i].text, radius - 20, 6);
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "bold 13px 'Montserrat', sans-serif";
+        ctx.fillText(prizes[i].text, radius - 20, 5);
         ctx.restore();
     }
 }
 
 function spinWheel() {
     if (isSpinning) return;
-
+    
     /* 
-      ==================================================================
-      NOTE FOR ONE-TIME USE:
-      Currently, the once-per-day restriction is disabled for testing.
-      AFTER you check the website and confirm everything works, uncomment 
-      the block below to enforce the 1-spin-per-day rule:
+      =================================================================
+      ONE-TIME SPIN FEATURE (Currently Disabled / Commented Out)
+      To activate permanent one-time spin per user/device later, 
+      uncomment the block below:
+      =================================================================
       
-      const lastSpin = localStorage.getItem('dfw_last_spin');
-      const today = new Date().toDateString();
-      if (lastSpin === today) {
-          alert("You have already spun the wheel today! Please check your active prize.");
-          showHistory();
+      if (localStorage.getItem('dfw_already_spun') === 'true') {
+          alert("You have already used your one-time spin!");
           return;
       }
-      ==================================================================
-    */
+      */
+
+    // Checks if user has an active prize already running
+    const activePrize = localStorage.getItem('dfw_active_prize');
+    if (activePrize) {
+        const prizeData = JSON.parse(activePrize);
+        if (new Date().getTime() < prizeData.expiresAt) {
+            alert("You already have an active prize! Check your active prize below.");
+            return;
+        }
+    }
 
     isSpinning = true;
-    const spinBtn = document.getElementById('spin-btn');
     spinBtn.disabled = true;
 
-    // Hide previous results while spinning
-    document.getElementById('result-section').classList.add('hidden');
-    document.getElementById('history-box').classList.add('hidden');
+    // Random spins + random target slice
+    const randomSpin = Math.floor(Math.random() * 5) + 5; 
+    const winningIndex = Math.floor(Math.random() * numSegments);
+    const degrees = randomSpin * 360 + (360 - (winningIndex * (360 / numSegments))) - (360 / numSegments / 2);
 
-    // Calculate rotation (Minimum 5 full spins + random offset)
-    const minSpins = 5;
-    const extraDegrees = Math.floor(Math.random() * 360);
-    const totalDegrees = (minSpins * 360) + extraDegrees;
+    currentRotation += degrees;
+    canvas.style.transition = 'transform 4s cubic-bezier(0.15, 0.90, 0.15, 1)';
+    canvas.style.transform = `rotate(${currentRotation}deg)`;
 
-    // Apply rotation transition matching the 4-second CSS timing
-    canvas.style.transition = "transform 4s cubic-bezier(0.15, 0.9, 0.2, 1)";
-    canvas.style.transform = `rotate(${totalDegrees}deg)`;
-
-    // Wait exactly 4 seconds for the wheel to stop completely before showing results
     setTimeout(() => {
-        canvas.style.transition = 'none';
-        const normalizedDegree = totalDegrees % 360;
-        canvas.style.transform = `rotate(${normalizedDegree}deg)`;
-
-        // Determine winning prize based on final angle
-        const winningPrize = determineWinner(normalizedDegree);
-        
-        // Save spin data
-        savePrize(winningPrize);
-
-        // Trigger victory effects
-        triggerWin(winningPrize);
-
         isSpinning = false;
         spinBtn.disabled = false;
+        
+        /* 
+          // Uncomment this line later to lock the spin permanently after winning:
+          // localStorage.setItem('dfw_already_spun', 'true');
+        */
+
+        showResult(prizes[winningIndex].text);
     }, 4000);
 }
 
-function determineWinner(deg) {
-    const sectorAngle = 360 / prizes.length;
-    // Adjust for pointer position at the top (-90 degrees offset)
-    let adjustedDeg = (360 - (deg % 360) + 270) % 360;
-    const winningIndex = Math.floor(adjustedDeg / sectorAngle);
-    return prizes[winningIndex].text;
-}
+function showResult(prizeText) {
+    wheelSection.classList.add('hidden');
+    resultSection.classList.remove('hidden');
+    prizeDisplay.textContent = prizeText;
 
-function savePrize(prizeText) {
-    const now = new Date();
-    const prizeData = {
-        prize: prizeText,
-        time: now.getTime(),
-        dateString: now.toDateString(),
-        code: "DFW-" + Math.floor(1000 + Math.random() * 9000)
-    };
-    
-    localStorage.setItem('dfw_active_prize', JSON.stringify(prizeData));
-    
-    /* 
-      Once-per-day storage tracker (uncomment alongside the check above later):
-      localStorage.setItem('dfw_last_spin', now.toDateString());
-    */
-}
-
-function triggerWin(prizeText) {
-    // Play Confetti
-    if (typeof confetti === 'function') {
-        confetti({
-            particleCount: 120,
-            spread: 80,
-            origin: { y: 0.6 }
-        });
+    if (prizeText === "Try Again") {
+        document.getElementById('win-title').textContent = "SO CLOSE!";
+        document.querySelector('.timer-box').style.display = 'none';
+        document.querySelector('.security-code').style.display = 'none';
+        return;
     }
 
-    // Update UI elements
-    document.getElementById('prize-display').innerText = prizeText;
-    document.getElementById('live-code').innerText = "DFW-" + Math.floor(1000 + Math.random() * 9000);
-    document.getElementById('result-section').classList.remove('hidden');
+    document.getElementById('win-title').textContent = "YOU WON!";
+    document.querySelector('.timer-box').style.display = 'block';
+    document.querySelector('.security-code').style.display = 'block';
 
-    // Start 10-minute countdown timer
-    startCountdown(10 * 60);
+    const randomCode = 'DFW-' + Math.floor(1000 + Math.random() * 9000);
+    codeDisplay.textContent = randomCode;
+
+    const expiresAt = new Date().getTime() + 10 * 60 * 1000; // 10 minutes
+    const prizeData = {
+        prize: prizeText,
+        code: randomCode,
+        expiresAt: expiresAt
+    };
+    localStorage.setItem('dfw_active_prize', JSON.stringify(prizeData));
+
+    startCountdown(expiresAt);
+    confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
 }
 
-function startCountdown(duration) {
-    let timer = duration, minutes, seconds;
-    const display = document.getElementById('countdown');
-    
-    // Clear any existing interval if running
-    if (window.countdownInterval) clearInterval(window.countdownInterval);
+function startCountdown(expireTime) {
+    const interval = setInterval(() => {
+        const now = new Date().getTime();
+        const distance = expireTime - now;
 
-    window.countdownInterval = setInterval(() => {
-        minutes = parseInt(timer / 60, 10);
-        seconds = parseInt(timer % 60, 10);
-
-        minutes = minutes < 10 ? "0" + minutes : minutes;
-        seconds = seconds < 10 ? "0" + seconds : seconds;
-
-        display.textContent = minutes + ":" + seconds;
-
-        if (--timer < 0) {
-            clearInterval(window.countdownInterval);
-            display.textContent = "EXPIRED";
-            document.getElementById('live-code').innerText = "EXPIRED";
+        if (distance < 0) {
+            clearInterval(interval);
+            countdownEl.textContent = "EXPIRED";
+            localStorage.removeItem('dfw_active_prize');
+            return;
         }
+
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        countdownEl.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     }, 1000);
 }
 
-function showHistory() {
-    const historyBox = document.getElementById('history-box');
-    const savedData = localStorage.getItem('dfw_active_prize');
-
-    if (!savedData) {
-        document.getElementById('history-prize').innerText = "No active prize found. Spin the wheel!";
-        document.getElementById('history-time').innerText = "";
-        document.getElementById('history-status').innerText = "";
-    } else {
-        const data = JSON.parse(savedData);
-        const elapsedMinutes = Math.floor((new Date().getTime() - data.time) / 1000 / 60);
-        
-        document.getElementById('history-prize').innerText = data.prize + " (Code: " + data.code + ")";
-        document.getElementById('history-time').innerText = "Won on: " + new Date(data.time).toLocaleTimeString();
-        
-        if (elapsedMinutes > 10) {
-            document.getElementById('history-status').innerText = "Status: EXPIRED (>10 mins passed)";
-            document.getElementById('history-status').style.color = "#ff4d4d";
-        } else {
-            document.getElementById('history-status').innerText = "Status: ACTIVE (" + (10 - elapsedMinutes) + " mins remaining)";
-            document.getElementById('history-status').style.color = "#4CAF50";
-        }
-    }
-
+function checkHistory() {
     historyBox.classList.toggle('hidden');
-}
+    const activePrize = localStorage.getItem('dfw_active_prize');
 
-function checkExistingPrize() {
-    const savedData = localStorage.getItem('dfw_active_prize');
-    if (savedData) {
-        const data = JSON.parse(savedData);
-        const elapsedSeconds = (new Date().getTime() - data.time) / 1000;
-        
-        // If within 10 minutes, restore the active screen state
-        if (elapsedSeconds < 600) {
-            document.getElementById('prize-display').innerText = data.prize;
-            document.getElementById('live-code').innerText = data.code;
-            document.getElementById('result-section').classList.remove('hidden');
-            startCountdown(Math.floor(600 - elapsedSeconds));
-        }
+    if (!activePrize) {
+        historyPrizeText.textContent = "No active prizes found.";
+        historyTimeText.textContent = "";
+        historyStatusText.textContent = "";
+        return;
+    }
+
+    const prizeData = JSON.parse(activePrize);
+    const timeLeft = prizeData.expiresAt - new Date().getTime();
+
+    if (timeLeft < 0) {
+        historyPrizeText.textContent = `Previous Prize: ${prizeData.prize} (${prizeData.code})`;
+        historyStatusText.textContent = "Status: EXPIRED";
+        historyStatusText.style.color = "#ff4d4d";
+        historyTimeText.textContent = "";
+    } else {
+        const mins = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+        const secs = Math.floor((timeLeft % (1000 * 60)) / 1000);
+        historyPrizeText.textContent = `Active Prize: ${prizeData.prize} | Code: ${prizeData.code}`;
+        historyStatusText.textContent = "Status: ACTIVE (Show to cashier)";
+        historyStatusText.style.color = "#4CAF50";
+        historyTimeText.textContent = `Time remaining: ${mins}:${secs < 10 ? '0' : ''}${secs}`;
     }
 }
+
+spinBtn.addEventListener('click', spinWheel);
+mainHistoryBtn.addEventListener('click', checkHistory);
+historyBtn.addEventListener('click', checkHistory);
+
+// Initialize wheel canvas drawing
+drawWheel();
