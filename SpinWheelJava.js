@@ -19,7 +19,7 @@ const spinSound = document.getElementById('spin-sound');
 const winSound = document.getElementById('win-sound');
 const loseSound = document.getElementById('lose-sound');
 
-// High-contrast, rich colorful wheel segments matching your layout
+// High-contrast, rich colorful wheel segments
 const prizes = [
     { text: "50% OFF", color: "#1a1a1a" },
     { text: "Try Again", color: "#b30000" },
@@ -35,9 +35,11 @@ let startAngle = 0;
 let isSpinning = false;
 let currentRotation = 0;
 
-// High-DPI crisp rendering fix for mobile phones
+// High-DPI crisp rendering fix for mobile and desktop screens
 function resizeCanvas() {
     const parentWidth = canvas.parentElement.clientWidth;
+    if (!parentWidth) return;
+    
     const dpr = window.devicePixelRatio || 1;
     
     canvas.width = parentWidth * dpr;
@@ -45,6 +47,7 @@ function resizeCanvas() {
     canvas.style.width = `${parentWidth}px`;
     canvas.style.height = `${parentWidth}px`;
     
+    ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset transform
     ctx.scale(dpr, dpr);
     drawWheel();
 }
@@ -87,14 +90,19 @@ function drawWheel() {
     }
 }
 
-//function spinWheel() {
- if (isSpinning) return;
+function spinWheel() {
+    if (isSpinning) return;
     
-     ONE-TIME SPIN LOCK CHECK (Activates one-time spin per device)
-        if (localStorage.getItem('dfw_already_spun') === 'true') {
-        alert("You have already used your one-time spin!");
-    return;
-    }
+    /* =================================================================
+       [ONE-TIME SPIN FEATURE - CURRENTLY COMMENTED OUT FOR TESTING]
+       Remove the `/*` and `*\/` tags below when ready to launch live.
+       =================================================================
+       
+       if (localStorage.getItem('dfw_already_spun') === 'true') {
+           alert("You have already used your one-time spin!");
+           return;
+       }
+    */
 
     const activePrize = localStorage.getItem('dfw_active_prize');
     if (activePrize) {
@@ -126,8 +134,10 @@ function drawWheel() {
         isSpinning = false;
         spinBtn.disabled = false;
         
-        // Lock device permanently after spin
-        localStorage.setItem('dfw_already_spun', 'true');
+        /* 
+           // Uncomment this line when ready to launch live:
+           // localStorage.setItem('dfw_already_spun', 'true');
+        */
 
         showResult(prizes[winningIndex].text);
     }, 4000);
@@ -215,7 +225,7 @@ function checkHistory() {
     const activePrize = localStorage.getItem('dfw_active_prize');
 
     if (!activePrize) {
-        historyPrizeText.textContent = "No active prizes found (Spin already used).";
+        historyPrizeText.textContent = "No active prizes found.";
         historyTimeText.textContent = "";
         historyStatusText.textContent = "";
         return;
@@ -244,7 +254,6 @@ spinBtn.addEventListener('click', spinWheel);
 mainHistoryBtn.addEventListener('click', checkHistory);
 closeHistoryBtn.addEventListener('click', () => historyBox.classList.add('hidden'));
 
-// Button to view last spin / active prize from result screen
 backToWheelBtn.addEventListener('click', () => {
     const activePrize = localStorage.getItem('dfw_active_prize');
     if (activePrize) {
@@ -255,6 +264,8 @@ backToWheelBtn.addEventListener('click', () => {
     }
 });
 
-// Initialize on load and resize
-window.addEventListener('load', resizeCanvas);
+// Force canvas render correctly once window loads
+window.addEventListener('load', () => {
+    setTimeout(resizeCanvas, 50);
+});
 window.addEventListener('resize', resizeCanvas);
