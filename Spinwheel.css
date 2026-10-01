@@ -99,7 +99,7 @@ body {
 
 .pointer {
     position: absolute;
-    top: -12px;
+    top: -14px;
     left: 50%;
     transform: translateX(-50%);
     width: 0;
@@ -107,11 +107,11 @@ body {
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
     border-top: 20px solid #ffd700;
-    z-index: 20;
+    z-index: 30;
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
 }
 
-/* Wheel Disk & Segments */
+/* Conic Gradient Wheel Disk */
 .wheel-disk {
     position: relative;
     width: 100%;
@@ -120,27 +120,37 @@ body {
     overflow: hidden;
     transition: transform 4s cubic-bezier(0.15, 0.90, 0.15, 1);
     border: 2px solid #ffd700;
+    background: conic-gradient(
+        #1a1a1a 0deg 60deg,
+        #b30000 60deg 120deg,
+        #242424 120deg 180deg,
+        #333333 180deg 240deg,
+        #141414 240deg 300deg,
+        #2a2a2a 300deg 360deg
+    );
 }
 
-.segment {
+.wheel-label {
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 50%;
+    left: 50%;
     width: 100%;
     height: 100%;
-    clip-path: polygon(50% 50%, 100% 0%, 100% 50%); /* creates pie slices */
     transform-origin: center;
+    pointer-events: none;
 }
 
-.segment span {
+.wheel-label span {
     position: absolute;
-    top: 22%;
-    right: 20%;
-    font-size: 12px;
+    top: 18%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
     font-weight: 800;
     color: #fff;
     text-shadow: 0 1px 3px rgba(0,0,0,0.9);
-    transform: rotate(30deg);
+    text-align: center;
+    width: 70px;
 }
 
 .wheel-center-cap {
@@ -159,7 +169,7 @@ body {
     color: #000;
     font-size: 14px;
     font-weight: bold;
-    z-index: 10;
+    z-index: 20;
 }
 
 button {
