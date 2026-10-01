@@ -95,14 +95,13 @@ h1 {
     overflow: hidden;
 }
 
-/* Flashing LED Lights around the rim (Original theme preserved with corrected positioning) */
+/* Flashing LED Lights around the rim */
 .wheel-lights {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
     pointer-events: none;
     z-index: 2;
 }
@@ -117,19 +116,19 @@ h1 {
     animation: flash 1s infinite alternate;
 }
 
-/* Perfectly balanced absolute positioning for the original 12 lights */
-.light:nth-child(1)  { top: 4px; left: 50%; transform: translateX(-50%); }
-.light:nth-child(2)  { top: 10%; right: 25%; }
-.light:nth-child(3)  { top: 25%; right: 10%; }
-.light:nth-child(4)  { top: 50%; right: 4%; transform: translateY(-50%); }
-.light:nth-child(5)  { bottom: 25%; right: 10%; }
-.light:nth-child(6)  { bottom: 10%; right: 25%; }
-.light:nth-child(7)  { bottom: 4px; left: 50%; transform: translateX(-50%); }
-.light:nth-child(8)  { bottom: 10%; left: 25%; }
-.light:nth-child(9)  { bottom: 25%; left: 10%; }
-.light:nth-child(10) { top: 50%; left: 4%; transform: translateY(-50%); }
-.light:nth-child(11) { top: 25%; left: 10%; }
-.light:nth-child(12) { top: 10%; left: 25%; }
+/* Perfectly aligned circular distribution for the 12 LED lights */
+.light:nth-child(1)  { transform: rotate(0deg) translate(146px) rotate(0deg); }
+.light:nth-child(2)  { transform: rotate(30deg) translate(146px) rotate(-30deg); }
+.light:nth-child(3)  { transform: rotate(60deg) translate(146px) rotate(-60deg); }
+.light:nth-child(4)  { transform: rotate(90deg) translate(146px) rotate(-90deg); }
+.light:nth-child(5)  { transform: rotate(120deg) translate(146px) rotate(-120deg); }
+.light:nth-child(6)  { transform: rotate(150deg) translate(146px) rotate(-150deg); }
+.light:nth-child(7)  { transform: rotate(180deg) translate(146px) rotate(-180deg); }
+.light:nth-child(8)  { transform: rotate(210deg) translate(146px) rotate(-210deg); }
+.light:nth-child(9)  { transform: rotate(240deg) translate(146px) rotate(-240deg); }
+.light:nth-child(10) { transform: rotate(270deg) translate(146px) rotate(-270deg); }
+.light:nth-child(11) { transform: rotate(300deg) translate(146px) rotate(-300deg); }
+.light:nth-child(12) { transform: rotate(330deg) translate(146px) rotate(-330deg); }
 
 @keyframes flash {
     0% { opacity: 0.3; background-color: #fff; }
