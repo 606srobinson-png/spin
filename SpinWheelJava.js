@@ -13,7 +13,7 @@ const historyPrizeText = document.getElementById('history-prize-text');
 const historyTimeText = document.getElementById('history-time-text');
 const historyStatusText = document.getElementById('history-status-text');
 
-// Exact 6 Segments matching your wheel image layout
+// Exact 6 Segments matching your wheel layout
 const prizes = [
     { text: "50% OFF", color: "#1e1e1e" },
     { text: "Try Again", color: "#b30000" },
@@ -66,15 +66,14 @@ function spinWheel() {
       ONE-TIME SPIN FEATURE (Currently Disabled / Commented Out)
       To activate permanent one-time spin per user/device later, 
       uncomment the block below:
-      =================================================================
       
       if (localStorage.getItem('dfw_already_spun') === 'true') {
           alert("You have already used your one-time spin!");
           return;
       }
+      =================================================================
       */
 
-    // Checks if user has an active prize already running
     const activePrize = localStorage.getItem('dfw_active_prize');
     if (activePrize) {
         const prizeData = JSON.parse(activePrize);
@@ -87,7 +86,6 @@ function spinWheel() {
     isSpinning = true;
     spinBtn.disabled = true;
 
-    // Random spins + random target slice
     const randomSpin = Math.floor(Math.random() * 5) + 5; 
     const winningIndex = Math.floor(Math.random() * numSegments);
     const degrees = randomSpin * 360 + (360 - (winningIndex * (360 / numSegments))) - (360 / numSegments / 2);
@@ -101,7 +99,7 @@ function spinWheel() {
         spinBtn.disabled = false;
         
         /* 
-          // Uncomment this line later to lock the spin permanently after winning:
+          // Uncomment this line later when you want to lock the spin permanently after winning:
           // localStorage.setItem('dfw_already_spun', 'true');
         */
 
@@ -128,7 +126,7 @@ function showResult(prizeText) {
     const randomCode = 'DFW-' + Math.floor(1000 + Math.random() * 9000);
     codeDisplay.textContent = randomCode;
 
-    const expiresAt = new Date().getTime() + 10 * 60 * 1000; // 10 minutes
+    const expiresAt = new Date().getTime() + 10 * 60 * 1000;
     const prizeData = {
         prize: prizeText,
         code: randomCode,
@@ -191,5 +189,5 @@ spinBtn.addEventListener('click', spinWheel);
 mainHistoryBtn.addEventListener('click', checkHistory);
 historyBtn.addEventListener('click', checkHistory);
 
-// Initialize wheel canvas drawing
-drawWheel();
+// Ensure the canvas fully renders the wheel when the script runs
+window.addEventListener('load', drawWheel);
