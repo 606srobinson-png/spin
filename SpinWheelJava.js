@@ -26,8 +26,10 @@ function spinWheel() {
     if (isSpinning) return;
     
     /* =================================================================
-       [ONE-TIME SPIN FEATURE - CURRENTLY COMMENTED OUT FOR TESTING]
-       Remove `/*` and `*\/` when ready for final website launch.
+       [ONE-TIME SPIN LOCK CODE - CURRENTLY IN COMMENT]
+       The code below is fully written for you. It prevents multiple spins.
+       Right now it is inactive so you can test freely. 
+       When you are ready to launch, just delete the `/*` and `*\/` around it.
        =================================================================
        
        if (localStorage.getItem('dfw_already_spun') === 'true') {
@@ -67,7 +69,8 @@ function spinWheel() {
         spinBtn.disabled = false;
         
         /* 
-           // Uncomment when launching live:
+           // This line is also part of the one-time lock code.
+           // Uncomment it along with the top block when ready to launch live:
            // localStorage.setItem('dfw_already_spun', 'true');
         */
 
