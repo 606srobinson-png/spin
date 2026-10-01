@@ -1,7 +1,3 @@
-/* ==========================================
-   DFW SMOKE & VAPOR SHOP - LUXURY THEME CSS
-   ========================================== */
-
 * {
     box-sizing: border-box;
     margin: 0;
@@ -20,7 +16,6 @@ body {
     overflow-x: hidden;
 }
 
-/* Luxury Card Container */
 .luxury-card {
     width: 100%;
     max-width: 420px;
@@ -32,10 +27,7 @@ body {
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.9), 0 0 25px rgba(230, 197, 71, 0.25);
 }
 
-/* Store Branding with Rich Yellow Effects */
-.store-branding {
-    margin-bottom: 8px;
-}
+.store-branding { margin-bottom: 8px; }
 
 .vip-badge {
     display: inline-block;
@@ -47,7 +39,6 @@ body {
     border-radius: 20px;
     letter-spacing: 1.5px;
     margin-bottom: 4px;
-    box-shadow: 0 2px 8px rgba(212, 175, 55, 0.4);
 }
 
 .store-title {
@@ -56,7 +47,6 @@ body {
     font-weight: 900;
     color: #ffd700;
     letter-spacing: 0.8px;
-    text-shadow: 0 2px 10px rgba(255, 215, 0, 0.4);
 }
 
 .main-heading {
@@ -65,7 +55,6 @@ body {
     font-weight: 900;
     color: #f7e8a1;
     margin-bottom: 2px;
-    letter-spacing: 1px;
 }
 
 .subtitle {
@@ -73,10 +62,8 @@ body {
     color: #bfa858;
     margin-bottom: 10px;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
 }
 
-/* Bright High-Visibility Notice Banner */
 .bright-exclusion-notice {
     background: #ffcc00;
     color: #000000;
@@ -85,12 +72,9 @@ body {
     padding: 8px 10px;
     border-radius: 6px;
     margin-bottom: 12px;
-    box-shadow: 0 0 12px rgba(255, 204, 0, 0.6);
     text-transform: uppercase;
-    letter-spacing: 0.3px;
 }
 
-/* Wheel Section & Outer Ring */
 #wheel-section {
     display: flex;
     flex-direction: column;
@@ -100,117 +84,84 @@ body {
 
 .wheel-outer-ring {
     position: relative;
-    width: 280px;
-    height: 280px;
+    width: 260px;
+    height: 260px;
     background: #0d0c09;
     border-radius: 50%;
-    padding: 8px;
+    padding: 6px;
     border: 4px solid #ffd700;
-    box-shadow: 0 0 25px rgba(255, 215, 0, 0.35), inset 0 0 15px rgba(0,0,0,0.8);
-    margin: 0 auto 12px auto;
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.35);
+    margin: 0 auto 15px auto;
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
 }
 
-/* Flashing LED Lights */
-.wheel-lights {
+.pointer {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 20px solid #ffd700;
+    z-index: 20;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
+}
+
+/* Wheel Disk & Segments */
+.wheel-disk {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+    transition: transform 4s cubic-bezier(0.15, 0.90, 0.15, 1);
+    border: 2px solid #ffd700;
+}
+
+.segment {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 2;
+    clip-path: polygon(50% 50%, 100% 0%, 100% 50%); /* creates pie slices */
+    transform-origin: center;
 }
 
-.light {
+.segment span {
     position: absolute;
-    width: 6px;
-    height: 6px;
-    background-color: #fff;
-    border-radius: 50%;
-    box-shadow: 0 0 6px #ffd700;
-    animation: flash 1s infinite alternate;
+    top: 22%;
+    right: 20%;
+    font-size: 12px;
+    font-weight: 800;
+    color: #fff;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+    transform: rotate(30deg);
 }
 
-.light:nth-child(1)  { top: 5px; left: 50%; transform: translateX(-50%); }
-.light:nth-child(2)  { top: 13%; right: 18%; }
-.light:nth-child(3)  { top: 28%; right: 6%; }
-.light:nth-child(4)  { top: 50%; right: 2%; transform: translateY(-50%); }
-.light:nth-child(5)  { bottom: 28%; right: 6%; }
-.light:nth-child(6)  { bottom: 13%; right: 18%; }
-.light:nth-child(7)  { bottom: 5px; left: 50%; transform: translateX(-50%); }
-.light:nth-child(8)  { bottom: 13%; left: 18%; }
-.light:nth-child(9)  { bottom: 28%; left: 6%; }
-.light:nth-child(10) { top: 50%; left: 2%; transform: translateY(-50%); }
-.light:nth-child(11) { top: 28%; left: 6%; }
-.light:nth-child(12) { top: 13%; left: 18%; }
-
-@keyframes flash {
-    0% { opacity: 0.3; background-color: #fff; }
-    100% { opacity: 1; background-color: #ffd700; box-shadow: 0 0 12px #ffd700; }
-}
-
-/* Pointer Arrow */
-.pointer {
-    position: absolute;
-    top: -8px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 0;
-    border-left: 9px solid transparent;
-    border-right: 9px solid transparent;
-    border-top: 18px solid #ffd700;
-    z-index: 10;
-    filter: drop-shadow(0 2px 5px rgba(0,0,0,0.8));
-}
-
-/* Canvas Container */
-.wheel-container {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-}
-
-#wheel {
-    width: 100%;
-    height: 100%;
-    display: block;
-    transform-origin: center center;
-}
-
-/* Center Cap */
 .wheel-center-cap {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 38px;
-    height: 38px;
-    background: radial-gradient(circle, #fff 0%, #ffd700 50%, #b8860b 100%);
+    width: 36px;
+    height: 36px;
+    background: radial-gradient(circle, #fff 0%, #ffd700 60%, #b8860b 100%);
     border: 2px solid #000;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
     color: #000;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: bold;
-    box-shadow: 0 0 10px rgba(0,0,0,0.7);
-    z-index: 5;
-    pointer-events: none;
+    z-index: 10;
 }
 
-/* Buttons */
 button {
     width: 100%;
     padding: 12px;
@@ -220,7 +171,6 @@ button {
     border-radius: 10px;
     cursor: pointer;
     text-transform: uppercase;
-    transition: all 0.2s ease;
     box-shadow: 0 4px 12px rgba(0,0,0,0.4);
 }
 
@@ -229,82 +179,24 @@ button {
     color: #000;
     border: none;
     margin-bottom: 8px;
-    letter-spacing: 0.5px;
-}
-
-.gold-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(212, 175, 55, 0.5);
 }
 
 .outline-btn {
     background: transparent;
     color: #ffd700;
     border: 2px solid #d4af37;
-    letter-spacing: 0.5px;
 }
 
-.outline-btn:hover {
-    background: rgba(212, 175, 55, 0.12);
-}
+.hidden { display: none !important; }
 
-/* Utility */
-.hidden {
-    display: none !important;
-}
+.result-title { font-size: 20px; color: #4CAF50; margin-bottom: 4px; }
+.prize-highlight { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 900; color: #ffd700; margin: 8px 0; }
+.timer-box { background: rgba(0, 0, 0, 0.5); padding: 8px; border-radius: 8px; margin-bottom: 12px; border: 1px solid #333; }
+.timer-box p { font-size: 11px; color: #ccc; margin-bottom: 3px; }
+#countdown { font-size: 22px; font-weight: 900; color: #ff4d4d; }
+.security-code { font-size: 13px; background: #111; padding: 8px; border-radius: 6px; border: 1px solid #333; margin-bottom: 12px; }
+.security-code strong { color: #ffd700; }
 
-/* Result Section */
-.result-title {
-    font-size: 20px;
-    color: #4CAF50;
-    margin-bottom: 4px;
-}
-
-.prize-highlight {
-    font-family: 'Playfair Display', serif;
-    font-size: 28px;
-    font-weight: 900;
-    color: #ffd700;
-    margin: 8px 0;
-    text-shadow: 0 0 12px rgba(255, 215, 0, 0.5);
-}
-
-.timer-box {
-    background: rgba(0, 0, 0, 0.5);
-    padding: 8px;
-    border-radius: 8px;
-    margin-bottom: 12px;
-    border: 1px solid #333;
-}
-
-.timer-box p {
-    font-size: 11px;
-    color: #ccc;
-    margin-bottom: 3px;
-}
-
-#countdown {
-    font-size: 22px;
-    font-weight: 900;
-    color: #ff4d4d;
-    letter-spacing: 1px;
-}
-
-.security-code {
-    font-size: 13px;
-    background: #111;
-    padding: 8px;
-    border-radius: 6px;
-    border: 1px solid #333;
-    margin-bottom: 12px;
-}
-
-.security-code strong {
-    color: #ffd700;
-    letter-spacing: 1px;
-}
-
-/* History Box */
 .history-box {
     margin-top: 10px;
     padding: 10px;
@@ -314,25 +206,10 @@ button {
     font-size: 12px;
     text-align: left;
 }
+.history-box h3 { color: #ffd700; font-size: 13px; margin-bottom: 4px; }
+.history-time { font-size: 10px; color: #aaa; margin-top: 3px; }
+.history-status { font-weight: bold; margin-top: 3px; }
 
-.history-box h3 {
-    color: #ffd700;
-    font-size: 13px;
-    margin-bottom: 4px;
-}
-
-.history-time {
-    font-size: 10px;
-    color: #aaa;
-    margin-top: 3px;
-}
-
-.history-status {
-    font-weight: bold;
-    margin-top: 3px;
-}
-
-/* Disclaimers & Notices */
 .disclaimer-container {
     margin-top: 12px;
     padding: 8px;
@@ -341,15 +218,5 @@ button {
     border: 1px solid rgba(255, 215, 0, 0.2);
     text-align: left;
 }
-
-.timer-warning {
-    font-size: 10px;
-    color: #b3b3b3;
-    margin-bottom: 3px;
-}
-
-.age-disclaimer {
-    font-size: 9px;
-    color: #888;
-    font-style: italic;
-}
+.timer-warning { font-size: 10px; color: #b3b3b3; margin-bottom: 3px; }
+.age-disclaimer { font-size: 9px; color: #888; font-style: italic; }
