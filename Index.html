@@ -3,58 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spin & Win | VIP Rewards</title>
-    <!-- Import Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="Spinwheel.css">
+    <title>DFW Smoke & Vapor Shop | Spin & Win</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&display=swap" rel="stylesheet">
     <!-- Confetti Library -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <link rel="stylesheet" href="Spinwheel.css">
 </head>
 <body>
 
-    <div class="container" id="main-container">
-        <!-- LUXURY STORE HEADER -->
+    <div class="container">
+        <!-- Store Branding Header -->
         <div class="store-branding">
             <span class="store-badge">★ EXCLUSIVE VIP REWARDS ★</span>
-            <h2 class="store-name">DFW SMOKE & VAPOR SHOP</h2>
+            <div class="store-name">DFW SMOKE & VAPOR SHOP</div>
         </div>
 
-        <h1>SPIN & WIN</h1>
+        <h1>Spin & Win</h1>
         <p class="subtitle">Scan, Spin & Save Instantly In-Store</p>
 
-        <!-- Wheel Wrapper with Animated LED Border -->
+        <!-- Wheel Section -->
         <div id="wheel-section">
             <div class="wheel-outer-ring">
-                <!-- Flashing LED Lights around the rim -->
                 <div class="wheel-lights">
-                    <span class="light"></span><span class="light"></span><span class="light"></span>
-                    <span class="light"></span><span class="light"></span><span class="light"></span>
-                    <span class="light"></span><span class="light"></span><span class="light"></span>
-                    <span class="light"></span><span class="light"></span><span class="light"></span>
+                    <div class="light"></div>
+                    <div class="light"></div>
+                    <div class="light"></div>
+                    <div class="light"></div>
+                    <div class="light"></div>
+                    <div class="light"></div>
+                    <div class="light"></div>
+                    <div class="light"></div>
+                    <div class="light"></div>
+                    <div class="light"></div>
+                    <div class="light"></div>
+                    <div class="light"></div>
                 </div>
-                
                 <div class="pointer"></div>
                 <div class="wheel-container">
-                    <canvas id="wheel" width="340" height="340" style="width: 100%; height: 100%; max-width: 340px; max-height: 340px;"></canvas>
+                    <canvas id="wheel" width="300" height="300"></canvas>
+                    <div class="wheel-center-cap">★</div>
                 </div>
-                <div class="wheel-center-cap">★</div>
             </div>
 
-            <button id="spin-btn" onclick="spinWheel()">SPIN THE WHEEL</button>
-            <button id="main-history-btn" onclick="showHistory()">Check My Active Prize</button>
+            <button id="spin-btn">Spin The Wheel</button>
+            <button id="main-history-btn">Check My Active Prize</button>
         </div>
 
-        <!-- History Display Box -->
-        <div id="history-box" class="history-box hidden">
-            <p><strong>Active Prize:</strong> <span id="history-prize">---</span></p>
-            <p class="history-time" id="history-time"></p>
-            <p id="history-status" class="history-status"></p>
-        </div>
-
-        <!-- Result & Timer Section -->
+        <!-- Result Section (Hidden by default) -->
         <div id="result-section" class="hidden">
             <h2 id="win-title">YOU WON!</h2>
-            <div id="prize-display">10% OFF</div>
+            <div id="prize-display">Prize Name</div>
             
             <div class="timer-box">
                 <p>Show cashier before timer expires:</p>
@@ -62,16 +61,27 @@
             </div>
 
             <div class="security-code">
-                <span>Verification Code: </span><strong id="live-code">---</strong>
+                Verification Code: <strong id="code-display">DFW-XXXX</strong>
             </div>
 
-            <div class="warning-box">
-                <p>⚠️ <strong>NOTICE:</strong> Do NOT close or refresh this tab. If closed, you can check your history within 10 minutes, after which it permanently expires.</p>
-                <p class="tobacco-disclaimer">*Note: Discount does not apply on cigarettes, cigars, or any tobacco products.</p>
-            </div>
+            <button id="history-btn">View Active Prize Status</button>
+        </div>
+
+        <!-- History Display Box -->
+        <div id="history-box" class="history-box hidden">
+            <h3>Your Prize Status</h3>
+            <p id="history-prize-text"></p>
+            <div class="history-time" id="history-time-text"></div>
+            <div class="history-status" id="history-status-text"></div>
+        </div>
+
+        <!-- Warning & Disclaimer -->
+        <div class="warning-box" style="margin-top: 20px;">
+            <p><strong>⚠️ NOTICE:</strong> Do not close or refresh this tab. If closed, you can check your history within 10 minutes, after which it permanently expires.</p>
+            <p class="tobacco-disclaimer">Must be 21+ with valid ID to purchase tobacco and vapor products. Valid only at DFW Smoke & Vapor Shop locations.</p>
         </div>
     </div>
 
-    <script src="SpinWheelJava.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
