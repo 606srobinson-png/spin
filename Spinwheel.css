@@ -218,13 +218,13 @@ button {
     box-shadow: 0 6px 15px rgba(212, 175, 55, 0.4);
 }
 
-#main-history-btn {
+#main-history-btn, #history-btn {
     background: transparent;
     color: #d4af37;
     border: 2px solid #d4af37;
 }
 
-#main-history-btn:hover {
+#main-history-btn:hover, #history-btn:hover {
     background: rgba(212, 175, 55, 0.1);
 }
 
