@@ -27,7 +27,8 @@ function spinWheel() {
     
     /* =================================================================
        [ONE-TIME SPIN LOCK CODE - CURRENTLY IN COMMENT FOR TESTING]
-       Remove `/*` and `*\/` when you are ready to launch live.
+       The code below is fully written for your website. 
+       When you are ready for final launch, remove the `/*` and `*\/` tags.
        =================================================================
        
        if (localStorage.getItem('dfw_already_spun') === 'true') {
@@ -48,9 +49,10 @@ function spinWheel() {
     isSpinning = true;
     spinBtn.disabled = true;
 
+    // Play spin audio safely
     if (spinSound) {
         spinSound.currentTime = 0;
-        spinSound.play().catch(e => console.log("Audio play blocked:", e));
+        spinSound.play().catch(e => console.log("Audio play blocked by browser:", e));
     }
 
     const randomSpin = Math.floor(Math.random() * 5) + 5; 
@@ -66,7 +68,7 @@ function spinWheel() {
         spinBtn.disabled = false;
         
         /* 
-           // Uncomment along with top block when launching live:
+           // Uncomment when launching live:
            // localStorage.setItem('dfw_already_spun', 'true');
         */
 
@@ -152,7 +154,7 @@ function startCountdown(expireTime) {
 }
 
 function checkHistory() {
-    // If an active prize exists, jump straight to the home/result page view to show it!
+    // If an active prize exists in storage, instantly take you to view it
     const activePrize = localStorage.getItem('dfw_active_prize');
     if (activePrize) {
         showActiveResultState(JSON.parse(activePrize));
@@ -160,7 +162,7 @@ function checkHistory() {
         return;
     }
 
-    // Otherwise, toggle the small info box if no active prize is found yet
+    // Otherwise, toggle the small informational box
     historyBox.classList.toggle('hidden');
     historyPrizeText.textContent = "No active prizes found yet. Spin the wheel first!";
     historyTimeText.textContent = "";
