@@ -4,16 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>DFW Smoke & Vapor Shop | VIP Spin & Win</title>
-    <!-- Luxury Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
-    <!-- Confetti Library -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <link rel="stylesheet" href="Spinwheel.css">
 </head>
 <body>
 
     <div class="luxury-card">
-        <!-- Store Branding Header -->
         <div class="store-branding">
             <span class="vip-badge">★ EXCLUSIVE VIP REWARDS ★</span>
             <h2 class="store-title">DFW SMOKE & VAPOR SHOP</h2>
@@ -22,7 +19,7 @@
         <h1 class="main-heading">SPIN & WIN</h1>
         <p class="subtitle">Scan, Spin & Save Instantly In-Store</p>
 
-        <!-- Bright Notice for Tobacco Exclusions -->
+        <!-- Bright Exclusion Notice -->
         <div class="bright-exclusion-notice">
             ⚠️ <strong>NOTICE:</strong> Offer will not apply on cigarettes, cigars, and all tobacco products.
         </div>
@@ -30,24 +27,26 @@
         <!-- Wheel Section -->
         <div id="wheel-section">
             <div class="wheel-outer-ring">
-                <div class="wheel-lights">
-                    <div class="light"></div><div class="light"></div><div class="light"></div>
-                    <div class="light"></div><div class="light"></div><div class="light"></div>
-                    <div class="light"></div><div class="light"></div><div class="light"></div>
-                    <div class="light"></div><div class="light"></div><div class="light"></div>
-                </div>
                 <div class="pointer"></div>
-                <div class="wheel-container">
-                    <canvas id="wheel" width="280" height="280"></canvas>
-                    <div class="wheel-center-cap">★</div>
+                
+                <!-- Pure CSS Rotating Wheel (Guaranteed to show up!) -->
+                <div id="wheel" class="wheel-disk">
+                    <div class="segment" style="transform: rotate(0deg); background: #1a1a1a;"><span>50% OFF</span></div>
+                    <div class="segment" style="transform: rotate(60deg); background: #b30000;"><span>Try Again</span></div>
+                    <div class="segment" style="transform: rotate(120deg); background: #1e1e1e;"><span>10% OFF</span></div>
+                    <div class="segment" style="transform: rotate(180deg); background: #2d2d2d;"><span>20% OFF</span></div>
+                    <div class="segment" style="transform: rotate(240deg); background: #161616;"><span>30% OFF</span></div>
+                    <div class="segment" style="transform: rotate(300deg); background: #262626;"><span>40% OFF</span></div>
                 </div>
+
+                <div class="wheel-center-cap">★</div>
             </div>
 
             <button id="spin-btn" class="gold-btn">SPIN THE WHEEL</button>
             <button id="main-history-btn" class="outline-btn">CHECK MY ACTIVE PRIZE</button>
         </div>
 
-        <!-- Result Section (Hidden by default) -->
+        <!-- Result Section -->
         <div id="result-section" class="hidden">
             <h2 id="win-title" class="result-title">YOU WON!</h2>
             <div id="prize-display" class="prize-highlight">Prize Name</div>
@@ -64,7 +63,7 @@
             <button id="back-to-wheel-btn" class="gold-btn">VIEW LAST SPIN / ACTIVE PRIZE</button>
         </div>
 
-        <!-- History Display Box -->
+        <!-- History Box -->
         <div id="history-box" class="history-box hidden">
             <h3>Your Prize Status</h3>
             <p id="history-prize-text"></p>
@@ -73,7 +72,6 @@
             <button id="close-history-btn" class="outline-btn" style="margin-top: 10px; padding: 6px; font-size: 11px;">Close Box</button>
         </div>
 
-        <!-- Additional Disclaimers -->
         <div class="disclaimer-container">
             <p class="timer-warning">Do not close or refresh this tab. Active prizes expire in 10 minutes.</p>
             <p class="age-disclaimer">Must be 21+ with valid ID. Valid only at DFW Smoke & Vapor Shop locations.</p>
