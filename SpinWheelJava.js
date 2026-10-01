@@ -22,13 +22,25 @@ const prizes = ["50% OFF", "Try Again", "10% OFF", "20% OFF", "30% OFF", "40% OF
 let isSpinning = false;
 let currentRotation = 0;
 
+// Check on page load if user already has an active prize so refreshing doesn't lose it
+window.addEventListener('DOMContentLoaded', () => {
+    const activePrize = localStorage.getItem('dfw_active_prize');
+    if (activePrize) {
+        const prizeData = JSON.parse(activePrize);
+        if (new Date().getTime() < prizeData.expiresAt) {
+            showActiveResultState(prizeData);
+        } else {
+            localStorage.removeItem('dfw_active_prize');
+        }
+    }
+});
+
 function spinWheel() {
     if (isSpinning) return;
     
     /* =================================================================
        [ONE-TIME SPIN LOCK CODE - CURRENTLY IN COMMENT FOR TESTING]
-       The code below is fully written for your website. 
-       When you are ready for final launch, remove the `/*` and `*\/` tags.
+       Remove `/*` and `*\/` when ready to go live.
        =================================================================
        
        if (localStorage.getItem('dfw_already_spun') === 'true') {
@@ -37,25 +49,15 @@ function spinWheel() {
        }
     */
 
-    const activePrize = localStorage.getItem('dfw_active_prize');
-    if (activePrize) {
-        const prizeData = JSON.parse(activePrize);
-        if (new Date().getTime() < prizeData.expiresAt) {
-            showActiveResultState(prizeData);
-            return;
-        }
-    }
-
     isSpinning = true;
     spinBtn.disabled = true;
 
-    // Play spin audio safely
     if (spinSound) {
         spinSound.currentTime = 0;
-        spinSound.play().catch(e => console.log("Audio play blocked by browser:", e));
+        spinSound.play().catch(e => console.log("Audio play blocked:", e));
     }
 
-    const randomSpin = Math.floor(Math.random() * 5) + 5; 
+    const randomSpin = Math.floor(Math.random() * 5) + 6; // Extra rotations for great effect
     const winningIndex = Math.floor(Math.random() * prizes.length);
     const degreesPerSlice = 360 / prizes.length;
     const targetDegree = randomSpin * 360 + (360 - (winningIndex * degreesPerSlice)) - (degreesPerSlice / 2);
@@ -73,7 +75,7 @@ function spinWheel() {
         */
 
         showResult(prizes[winningIndex]);
-    }, 4000);
+    }, 4500);
 }
 
 function showResult(prizeText) {
@@ -154,7 +156,6 @@ function startCountdown(expireTime) {
 }
 
 function checkHistory() {
-    // If an active prize exists in storage, instantly take you to view it
     const activePrize = localStorage.getItem('dfw_active_prize');
     if (activePrize) {
         showActiveResultState(JSON.parse(activePrize));
@@ -162,7 +163,6 @@ function checkHistory() {
         return;
     }
 
-    // Otherwise, toggle the small informational box
     historyBox.classList.toggle('hidden');
     historyPrizeText.textContent = "No active prizes found yet. Spin the wheel first!";
     historyTimeText.textContent = "";
@@ -174,7 +174,6 @@ spinBtn.addEventListener('click', spinWheel);
 mainHistoryBtn.addEventListener('click', checkHistory);
 closeHistoryBtn.addEventListener('click', () => historyBox.classList.add('hidden'));
 
-// Takes you back to the main wheel home screen
 backToWheelBtn.addEventListener('click', () => {
     resultSection.classList.add('hidden');
     wheelSection.classList.remove('hidden');
